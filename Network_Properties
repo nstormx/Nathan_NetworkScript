@@ -1,4 +1,35 @@
 #!/bin/bash
 
 #This is a variable I made called "today" which captures the Day(%a) Month(%b) 24-hour Time(%R)
-#and Date(%m-%d-%Y).
+#and Date(%m-%d-%Y). I added the date twice so you only need to read the first part unless you're
+#looking for a specific time which allows for faster browsing of files
+today=$(date '+%a-%b-%R-%m-%d-%Y')
+
+#exec is used to execute the tee command, and then it makes the file in the persons home directory
+#and finally it makes a file called "Network_Info_$today.log" $today being the variable I made
+#earlier to calculate the current time. Also we have "2>&1" at the end which is used to capture
+#all command outputs up to the "1>&2" which is at the end of the file.
+exec > >(tee "$HOME/Network_Info_$today.log") 2>&1
+
+#This first prints out "Domain Names:", and then it uses the command "resolvectl domain" which
+#acquires the users domain names.
+printf "\nDomain Names:\n"
+resolvectl domain
+
+#This first prints out "DNS servers:", and then it uses the command resolvectl dns which gets the
+#users DNS IP addresses.
+printf "\nDNS Servers:\n"
+resolvectl dns
+
+#First it prints "Network Settings", and then it prints out the users network information with the
+#"ip a" command which tontains the IP address.
+printf "\nNetwork Settings:\n"
+ip a
+
+#This command lists all of the ports then only prints out the ones with "LISTEN" in the line
+#which would be the open ports. Also, it prints out "Open Ports" for better visual appearance.
+printf "\nOpen Ports:\n"
+ss -lntup | grep "LISTEN"
+
+#This is the end of capturing inputs.
+1>&2
