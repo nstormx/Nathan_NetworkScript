@@ -1,0 +1,4 @@
+#!/bin/bash
+
+#This is a variable I made called "today" which captures the Day(%a) Month(%b) 24-hour Time(%R)
+#and Date(%m-%d-%Y).
